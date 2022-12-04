@@ -26,6 +26,9 @@ class Mask:
         # Make a copy because some implementations
         # of step perform updates in place.
         a = self.fibers.copy()
+        p_loc = locs_where(self.particle_loc == 1)[0]
+        a[p_loc] = 2 # Different color where particle is
+        print(a)
         n, m = a.shape
         plt.axis([0, m, 0, n])
         plt.xticks([])
@@ -67,8 +70,6 @@ class Mask:
         # If there's a fiber at the source, then destination is same as source. If fibers == 0 at source the there is no fiber
 
         if self.fibers[source] == 0:
-            print(type(self.particle_loc))
-            print(type(self.kernel))
             possible_locs = correlate2d(self.particle_loc, self.kernel, **options) # Cross-correlate kernel and particle_loc to figure out where particle should go
 
             dest = random_loc(locs_where(possible_locs > 0)) # Choose a random particle location

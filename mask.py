@@ -30,7 +30,7 @@ class Mask:
         a = self.fibers.copy()
         p_loc = locs_where(self.particle_loc == 1)[0]
         a[p_loc] = 2 # Different color where particle is
-        print(a)
+        # print(a)
         n, m = a.shape
         plt.axis([0, m, 0, n])
         plt.xticks([])
@@ -140,7 +140,7 @@ class CA_percolation:
         a = self.holes == 0
         
         a = a + self.fluid * 2
-        print(a)
+        # print(a)
         n, m = a.shape
         plt.axis([0, m, 0, n])
         plt.xticks([])
@@ -179,16 +179,19 @@ class Particle:
 
     def move(self):
         if self.stuck:
-            return
+            return True
         position_grid = np.zeros(np.shape(self.grid), dtype=np.int8)
         position_grid[self.pos] = 1
         movement_grid = correlate2d(position_grid, MOVEMENT_KERNEL, mode="same")
-        print(movement_grid)
+        # print(movement_grid)
         next_pos = random_loc(locs_where(movement_grid))
 
         self.stuck = self.grid[next_pos] == 1
 
         self.pos = next_pos
+    def made_through(self, l):
+        if self.pos[0] == l+1:
+            return True
     
     
 
@@ -196,6 +199,8 @@ class AgentSimulation:
     def __init__(self, l, w, p, num_particles):
         self.grid = np.concatenate([np.zeros((2,w), dtype=np.int8),make_grid(l,w,p)])
         self.particles = self.construct_particles(num_particles, w)
+        self.l = l
+        # print(l)
     
     def construct_particles(self, num_particles, start_range):
         particles = []
@@ -204,15 +209,31 @@ class AgentSimulation:
         return particles
     
     def step(self):
+        num_still_going = 0
         for particle in self.particles:
             particle.move()
+            if(particle.stuck or particle.made_through(self.l)):
+                pass
+            else:
+                num_still_going += 1
+
+        return num_still_going
+
+    def count_made_through(self):
+        c = 0
+        # a = []
+        for particle in self.particles:
+            if particle.made_through(self.l):
+                c += 1
+        return c
+                
     
     def draw(self, plot_show=True, grid_lines=False, animate=False):
         a = self.grid.copy()
 
         for particle in self.particles:
             a[particle.pos] = 2
-        print(a)
+        # print(a)
         n, m = a.shape
         plt.axis([0, m, 0, n])
         plt.xticks([])
@@ -236,7 +257,10 @@ class AgentSimulation:
             for particle in self.particles:
                 a[particle.pos] = 2
             states.append(a)
-            self.step()
+            num_still_going = self.step()
+            if num_still_going == 0:
+                break
+        print(self.count_made_through())
         return states
     
 

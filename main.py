@@ -35,8 +35,8 @@ if __name__ == "__main__":
     for i in range(100):
         sim.draw()
         sim.step()'''
-    sim = AgentSimulation(20, 100, 0.16, 1000)
-    frames = sim.simulate(100)
+    sim = AgentSimulation(50, 200, 0.05, 10)
+    frames = sim.simulate(200)
     mask.animate_frames(frames)
 
 

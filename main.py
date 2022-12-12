@@ -9,6 +9,7 @@ from mask import Mask
 from mask import CA_percolation
 
 from mask import AgentSimulation
+import mask
 '''
 def run_simulation():
     sim = setup_simulation()
@@ -20,13 +21,13 @@ def setup_simulation():
     return sim
 
 '''
-
+'''
 def agent_simulate(steps):
-    sim = AgentSimulation(100, 100, 0.2, 20)
+    sim = AgentSimulation(7, 7, 0.2, 1)
     for i in range(steps):
         sim.step()
-        sim.draw()
-    
+        sim.draw(animate=True)
+'''    
 
 if __name__ == "__main__":
     #run_simulation()
@@ -34,6 +35,9 @@ if __name__ == "__main__":
     for i in range(100):
         sim.draw()
         sim.step()'''
-    agent_simulate(100)
+    sim = AgentSimulation(20, 100, 0.2, 1000)
+    frames = sim.simulate(100)
+    mask.animate_frames(frames)
+
 
 

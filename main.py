@@ -29,8 +29,8 @@ def agent_simulate(steps):
         sim.draw(animate=True)
 '''    
 
-def simulate_one(l, w, p, n_agents):
-    for i in range(5):
+def simulate_one(n_runs, l, w, p, n_agents):
+    for i in range(n_runs):
         sim = AgentSimulation(l, w, p, n_agents)
         sim.simulate(l*2)
         frac_through = 1 - (sim.count_made_through()/n_agents)
@@ -57,11 +57,12 @@ if __name__ == "__main__":
     ps = [0.025, 0.05, 0.075, 0.1, 0.125, 0.15, 0.175, 0.2]
     n_agents = 1000
     width = 200
+    n_runs = 20
 
     params = []
     for l in lens:
         for p in ps:
-            params.append((l, width, p, n_agents))
+            params.append((n_runs, l, width, p, n_agents))
     
     print(len(params))
 

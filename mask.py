@@ -7,8 +7,10 @@ from time import sleep
 import matplotlib.animation as animation
 import random
 
-palette = sns.color_palette('muted')
-colors = 'white', palette[1], palette[0]
+# palette = sns.color_palette('muted')
+palette = sns.color_palette('bright')
+# colors = 'white', palette[1], palette[0]
+colors = 'white', 'red', 'green', 'blue'
 cmap = LinearSegmentedColormap.from_list('cmap', colors)
 cmap_no_empty = LinearSegmentedColormap.from_list('cmap', (palette[1], palette[0]))
 
@@ -255,7 +257,7 @@ class AgentSimulation:
         for i in range(frames):
             a = self.grid.copy()
             for particle in self.particles:
-                a[particle.pos] = 2
+                a[particle.pos] = min(3, a[particle.pos] + 2)
             states.append(a)
             num_still_going = self.step()
             if num_still_going == 0:
@@ -283,6 +285,7 @@ def animate_frames(frames):
         ax.set_title(f"frame {i}")
         # Note that using time.sleep does *not* work here!
         plt.pause(0.1)
+    plt.pause(100)
         
 
         

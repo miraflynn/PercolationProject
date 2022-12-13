@@ -43,7 +43,7 @@ def simulate_one(n_runs, l, w, p, n_agents):
 
 
 
-if __name__ == "__main__":
+def param_sweep_shitshow():
     #run_simulation()
     '''sim = CA_percolation(30,30, 0.6)
     for i in range(100):
@@ -86,4 +86,14 @@ if __name__ == "__main__":
         writer.writerows(output_rows)
 
 
+def fluid_animate():
+    sim = CA_percolation(50, 200, 0.05)
+    # sim.step()
+    # sim.draw()
+    # plt.show()
+    frames = sim.simulate(200)
+    mask.animate_frames(frames, pause = 0.25)
 
+if __name__ == "__main__":
+    # param_sweep_shitshow()
+    fluid_animate()

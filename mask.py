@@ -124,19 +124,23 @@ class Mask:
     #     return self.avg_percent_same(), max_steps
 
 
-
+# CA_KERNEL = np.asarray([[0,1,0],[1,1,1],[0,1,0]], dtype=np.int8)
 
 
 class CA_percolation:
-    def __init__(self, l, w, p):
+    def __init__(self, l, w, p, first_water = (25, 25)):
         self.holes = make_grid(l, w, p)
         self.fluid = np.zeros((l, w), dtype=np.int8)
-        self.fluid[0,0] = 1
+        # self.fluid[0,0] = 1
+        self.fluid[first_water[0], first_water[1]] = 1
+        self.holes[first_water[0], first_water[1]] = 0
+        # self.kernel = CA_KERNEL 
         self.kernel = np.ones((3,3),dtype=np.int8)
         
     
     def step(self):
         self.fluid = (correlate2d(self.fluid, self.kernel, mode="same") * self.holes) > 0
+        self.fluid = np.asarray(self.fluid, dtype=np.int8)
 
     def draw(self, plot_show=True, grid_lines=False):
         a = self.holes == 0
@@ -158,6 +162,28 @@ class CA_percolation:
             ax.grid(color='k')
         if plot_show:
             plt.show()
+
+    def simulate(self, frames):
+        states = []
+        for i in range(frames):
+
+            self.step()
+            
+            a = self.holes.copy() == 0
+        
+            b = a + self.fluid.copy() * 2
+
+            states.append(b)
+            print(b)
+
+            # for particle in self.particles:
+            #     a[particle.pos] = min(3, a[particle.pos] + 2)
+            # states.append(a)
+            # num_still_going = self.step()
+            # if num_still_going == 0:
+            #     break
+        # print(self.count_made_through())
+        return states
 
 
 
@@ -266,7 +292,7 @@ class AgentSimulation:
         return states
     
 
-def animate_frames(frames):
+def animate_frames(frames, pause = 0.1):
 
     fig, ax = plt.subplots()
 
@@ -284,7 +310,7 @@ def animate_frames(frames):
 
         ax.set_title(f"frame {i}")
         # Note that using time.sleep does *not* work here!
-        plt.pause(0.1)
+        plt.pause(pause)
     plt.pause(100)
         
 

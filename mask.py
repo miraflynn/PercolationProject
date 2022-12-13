@@ -295,7 +295,7 @@ def animate_frames(frames):
         
 
 
-def make_grid(l, w, prob):
+def make_grid(l, w, prob, seed = 42069):
         """Make an array with two types of agents.
         
         n: width and height of the array
@@ -304,6 +304,7 @@ def make_grid(l, w, prob):
         return: NumPy array
         """
 
+        np.random.seed(seed)
         r = np.random.rand(l, w) > (1-prob)
         r = r.astype(np.int8)
         print(r)

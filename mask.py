@@ -262,7 +262,7 @@ class AgentSimulation:
             num_still_going = self.step()
             if num_still_going == 0:
                 break
-        print(self.count_made_through())
+        # print(self.count_made_through())
         return states
     
 
@@ -307,7 +307,7 @@ def make_grid(l, w, prob, seed = 42069):
         np.random.seed(seed)
         r = np.random.rand(l, w) > (1-prob)
         r = r.astype(np.int8)
-        print(r)
+        # print(r)
         return r
 
 def locs_where(condition):

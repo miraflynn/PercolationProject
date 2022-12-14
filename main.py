@@ -87,12 +87,14 @@ def param_sweep_shitshow():
 
 
 def fluid_animate():
-    sim = CA_percolation(50, 200, 0.05)
+    p = 0.4
+    sim = CA_percolation(50, 100, p)
     # sim.step()
     # sim.draw()
     # plt.show()
-    frames = sim.simulate(200)
-    mask.animate_frames(frames, pause = 0.25)
+    frames = sim.simulate(100)
+    
+    mask.animate_frames(frames, p)
 
 if __name__ == "__main__":
     # param_sweep_shitshow()

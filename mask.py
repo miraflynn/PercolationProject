@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.signal import correlate2d
+from scipy.signal import correlate2d, convolve2d
 import seaborn as sns
 from matplotlib.colors import LinearSegmentedColormap
 from time import sleep
@@ -128,7 +128,7 @@ class Mask:
 
 
 class CA_percolation:
-    def __init__(self, l, w, p, first_water = (25, 25)):
+    def __init__(self, l, w, p, first_water = (10, 10)):
         self.holes = make_grid(l, w, p)
         self.fluid = np.zeros((l, w), dtype=np.int8)
         # self.fluid[0,0] = 1
@@ -139,8 +139,14 @@ class CA_percolation:
         
     
     def step(self):
-        self.fluid = (correlate2d(self.fluid, self.kernel, mode="same") * self.holes) > 0
-        self.fluid = np.asarray(self.fluid, dtype=np.int8)
+        a = self.fluid
+        self.fluid = ((correlate2d(self.fluid, self.kernel, mode="same") * (self.holes)) > 0).astype(int)
+        # self.fluid = ((convolve2d(self.fluid, self.kernel, mode="same") * self.holes) > 0).astype(int)
+        # "Array multiplication is not matrix multiplication" - this site https://scipy-lectures.org/intro/numpy/operations.html#elementwise-operations
+        # self.fluid = np.asarray(self.fluid, dtype=np.int8).copy()
+        b = self.fluid
+        print(self.fluid)
+        print("this code did run")
 
     def draw(self, plot_show=True, grid_lines=False):
         a = self.holes == 0
@@ -292,7 +298,7 @@ class AgentSimulation:
         return states
     
 
-def animate_frames(frames, pause = 0.1):
+def animate_frames(frames, p, pause = 0.1):
 
     fig, ax = plt.subplots()
 
@@ -308,7 +314,7 @@ def animate_frames(frames, pause = 0.1):
         options['extent'] = [0, m, 0, n]
         ax.imshow(frame, cmap, **options)
 
-        ax.set_title(f"frame {i}")
+        ax.set_title(f"p = {p}\n frame {i}")
         # Note that using time.sleep does *not* work here!
         plt.pause(pause)
     plt.pause(100)
@@ -332,7 +338,7 @@ def make_grid(l, w, prob, seed = 42069):
 
         np.random.seed(seed)
         r = np.random.rand(l, w) > (1-prob)
-        r = r.astype(np.int8)
+        r = r.astype(int)
         # print(r)
         return r
 

@@ -214,9 +214,9 @@ class Particle:
     def move(self):
         if self.stuck:
             return True
-        # print(np.shape(self.grid)[0])
+        # print(self.pos)
         if self.made_through(np.shape(self.grid)[0]-2):
-            return True
+            return False
         position_grid = np.zeros(np.shape(self.grid), dtype=np.int8)
         position_grid[self.pos] = 1
         movement_grid = correlate2d(position_grid, MOVEMENT_KERNEL, mode="same")
@@ -234,9 +234,11 @@ class Particle:
 
 class AgentSimulation:
     def __init__(self, l, w, p, num_particles):
-        self.grid = np.concatenate([np.zeros((2,w), dtype=np.int8),make_grid(l,w,p)])
+        self.grid = np.concatenate([np.zeros((1,w), dtype=np.int8),make_grid(l,w,p),np.zeros((1,w), dtype=np.int8)])
+        # print(np.shape(self.grid))
         self.particles = self.construct_particles(num_particles, w)
         self.l = l
+        # print(self.l)
         # print(l)
     
     def construct_particles(self, num_particles, start_range):
@@ -293,7 +295,10 @@ class AgentSimulation:
             num_still_going = self.step()
             a = self.grid.copy()
             for particle in self.particles:
-                a[particle.pos] = min(3, a[particle.pos] + 2)
+                if self.grid[particle.pos] == 0:
+                    a[particle.pos] = 2
+                else:
+                    a[particle.pos] = 3
             states.append(a)
             if num_still_going == 0:
                 break
@@ -304,6 +309,8 @@ class AgentSimulation:
 def animate_frames(frames, p, pause = 0.1):
 
     fig, ax = plt.subplots()
+
+    fig.set_size_inches(16, 10)
 
     for i, frame in enumerate(frames):
         ax.clear()

@@ -42,7 +42,7 @@ def simulate_one(n_runs, l, w, p, n_agents):
     
 
 def animate_one():
-    sim = AgentSimulation(50, 200, 0.05, 1000)
+    sim = AgentSimulation(50, 200, 0.01, 1000)
     print("setup done")
     frames = sim.simulate(200)
     print("done simulating")
@@ -57,8 +57,8 @@ def param_sweep_shitshow():
         sim.step()'''
     # 
 
-    lens = [10, 20, 30, 40, 50]
-    ps = [0.025, 0.05, 0.075, 0.1, 0.125, 0.15, 0.175, 0.2]
+    lens = [1, 5, 10, 20, 30, 40, 50]
+    ps = [0, 0.025, 0.05, 0.075, 0.1, 0.125, 0.15, 0.175, 0.2]
     n_agents = 1000
     width = 200
     n_runs = 20

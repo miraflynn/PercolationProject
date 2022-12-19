@@ -214,6 +214,9 @@ class Particle:
     def move(self):
         if self.stuck:
             return True
+        # print(np.shape(self.grid)[0])
+        if self.made_through(np.shape(self.grid)[0]-2):
+            return True
         position_grid = np.zeros(np.shape(self.grid), dtype=np.int8)
         position_grid[self.pos] = 1
         movement_grid = correlate2d(position_grid, MOVEMENT_KERNEL, mode="same")
@@ -239,7 +242,7 @@ class AgentSimulation:
     def construct_particles(self, num_particles, start_range):
         particles = []
         for i in range(num_particles):
-            particles.append(Particle(self.grid,(0, random.randrange(start_range))))
+            particles.append(Particle(self.grid, pos = (0, random.randrange(start_range))))
         return particles
     
     def step(self):
@@ -287,11 +290,11 @@ class AgentSimulation:
     def simulate(self, frames):
         states = []
         for i in range(frames):
+            num_still_going = self.step()
             a = self.grid.copy()
             for particle in self.particles:
                 a[particle.pos] = min(3, a[particle.pos] + 2)
             states.append(a)
-            num_still_going = self.step()
             if num_still_going == 0:
                 break
         # print(self.count_made_through())

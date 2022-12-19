@@ -30,18 +30,24 @@ def agent_simulate(steps):
 '''    
 
 def simulate_one(n_runs, l, w, p, n_agents):
+    fracs = []
     for i in range(n_runs):
         sim = AgentSimulation(l, w, p, n_agents)
-        sim.simulate(l*2)
-        frac_through = 1 - (sim.count_made_through()/n_agents)
+        fracs.append(1 - (sim.count_made_through()/n_agents))
 
-    avg_frac_through = np.mean(frac_through)
-    print(f'Length: {l}, Width: {w}, P(fiber): {p}, Number of Particles: {n_agents}, Efficacy: {frac_through}')
+    avg_frac_through = np.mean(fracs)
+    print(f'Length: {l}, Width: {w}, P(fiber): {p}, Number of Particles: {n_agents}, Efficacy: {avg_frac_through}')
     # return (l, w, p, n_agents, frac_through)
-    return (l, p, frac_through)
+    return (l, p, avg_frac_through)
     
 
-
+def animate_one():
+    sim = AgentSimulation(50, 200, 0.05, 1000)
+    print("setup done")
+    frames = sim.simulate(200)
+    print("done simulating")
+    mask.animate_frames(frames, p=None)
+    print("done!")
 
 def param_sweep_shitshow():
     #run_simulation()
@@ -49,9 +55,7 @@ def param_sweep_shitshow():
     for i in range(100):
         sim.draw()
         sim.step()'''
-    # sim = AgentSimulation(50, 200, 0.05, 1000)
-    # frames = sim.simulate(200)
-    # mask.animate_frames(frames)
+    # 
 
     lens = [10, 20, 30, 40, 50]
     ps = [0.025, 0.05, 0.075, 0.1, 0.125, 0.15, 0.175, 0.2]
@@ -97,5 +101,6 @@ def fluid_animate():
     mask.animate_frames(frames, p)
 
 if __name__ == "__main__":
-    # param_sweep_shitshow()
-    fluid_animate()
+    param_sweep_shitshow()
+    # fluid_animate()
+    # animate_one()

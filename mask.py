@@ -215,8 +215,8 @@ class Particle:
         if self.stuck:
             return True
         # print(self.pos)
-        if self.made_through(np.shape(self.grid)[0]-2):
-            return False
+        if self.made_through():
+            return
         position_grid = np.zeros(np.shape(self.grid), dtype=np.int8)
         position_grid[self.pos] = 1
         movement_grid = correlate2d(position_grid, MOVEMENT_KERNEL, mode="same")
@@ -226,8 +226,9 @@ class Particle:
         self.stuck = self.grid[next_pos] == 1
 
         self.pos = next_pos
-    def made_through(self, l):
-        if self.pos[0] == l+1:
+
+    def made_through(self):
+        if self.pos[0] == np.shape(self.grid)[0]-1:
             return True
     
     
@@ -251,7 +252,7 @@ class AgentSimulation:
         num_still_going = 0
         for particle in self.particles:
             particle.move()
-            if(particle.stuck or particle.made_through(self.l)):
+            if(particle.stuck or particle.made_through()):
                 pass
             else:
                 num_still_going += 1
@@ -262,7 +263,8 @@ class AgentSimulation:
         c = 0
         # a = []
         for particle in self.particles:
-            if particle.made_through(self.l):
+            # print(particle.pos)
+            if particle.pos[0] == self.l+1:
                 c += 1
         return c
                 

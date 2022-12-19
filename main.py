@@ -33,9 +33,12 @@ def simulate_one(n_runs, l, w, p, n_agents):
     fracs = []
     for i in range(n_runs):
         sim = AgentSimulation(l, w, p, n_agents)
+        sim.simulate(200)
         fracs.append(1 - (sim.count_made_through()/n_agents))
+        # fracs.append(sim.count_made_through())
 
     avg_frac_through = np.mean(fracs)
+    # print(fracs)
     print(f'Length: {l}, Width: {w}, P(fiber): {p}, Number of Particles: {n_agents}, Efficacy: {avg_frac_through}')
     # return (l, w, p, n_agents, frac_through)
     return (l, p, avg_frac_through)
@@ -57,8 +60,8 @@ def param_sweep_shitshow():
         sim.step()'''
     # 
 
-    lens = [1, 5, 10, 20, 30, 40, 50]
-    ps = [0, 0.025, 0.05, 0.075, 0.1, 0.125, 0.15, 0.175, 0.2]
+    lens = [10, 20, 30, 40, 50]
+    ps = [0.025, 0.05, 0.075, 0.1, 0.125, 0.15, 0.175, 0.2]
     n_agents = 1000
     width = 200
     n_runs = 20
@@ -80,7 +83,7 @@ def param_sweep_shitshow():
     # headers = ["i", "length", "width", "p", "n_particles"]
     headers = ["length", "p", "frac_stopped"]
     output_rows.insert(0, headers)
-    print(output_rows)
+    # print(output_rows)
     
     # Write the output list to CSV
     wd = os.path.dirname(__file__)
